@@ -7,6 +7,26 @@ require('dotenv').config()
 const supabase = require('./db.js');
 app.use(express.json());
 
+
+const allowedOrigins = ['http://localhost:3000', 'http://example.com'];
+
+const corsOptions = {
+  origin: (origin, callback) => {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+
+    if (allowedOrigins.includes(origin)) {
+      callback(null, true); // Origin is allowed
+    } else {
+      callback(new Error('Not allowed by CORS')); // Origin is not allowed
+    }
+  },
+  optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+}
+
+app.use(cors())
+
+
 app.get('/', (req, res) => {
     res.send('Hello World!');
 })
