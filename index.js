@@ -35,7 +35,7 @@ app.get('/', (req, res) => {
 app.get('/getpokemon',async (req, res, next) => {
    const { data, error } =  await supabase
     .from('pokemon')
-    .select('name, url, front_default, type')
+    .select('*')
     if(error) {
         console.error(error)
         return res.status(500).send('Error fetching data')
