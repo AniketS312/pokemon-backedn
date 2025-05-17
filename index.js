@@ -37,8 +37,7 @@ app.get('/getpokemon',async (req, res, next) => {
     .from('pokemon')
     .select('*')
     if(error) {
-        console.error(error)
-        return res.status(500).send('Error fetching data')
+        return res.status(500).json('Error fetching data')
     }
     res.send(data)
 });
@@ -57,12 +56,12 @@ app.post('/addpokemon', async (req, res) => {
     // Error checking
     if(error) {
         console.error(error)
-        return res.status(500).send('Error fetching data from database')
+        return res.status(500).json('Error fetching data from database')
     }
     // Duplicate pokemon check
     if(data.length > 0) {
         console.log('Pokemon already exists')
-        return res.status(400).send('Pokemon already exists in database')
+        return res.status(400).json('Pokemon already exists in database')
     }
     // Add pokemon
     console.log('Adding pokemon')
@@ -73,9 +72,9 @@ app.post('/addpokemon', async (req, res) => {
         .select();
         if(insertError) {
             console.error(insertError)
-            return res.status(500).send('Error inserting data into database')
+            return res.status(500).json('Error inserting data into database')
         }
-    res.status(200).send(newData);
+    res.status(200).json(newData);
 })
 
 app.delete('/removepokemon/:name', async (req, res) => {
@@ -86,17 +85,18 @@ app.delete('/removepokemon/:name', async (req, res) => {
         .ilike('name', pokemonName)
     // Error checking
     if(error) {
-        return res.status(500).send('Error fetching data from database')
+        return res.status(500).json('Error fetching data from database')
     }
     // Duplicate pokemon check
     if(data.length === 0) {
-        return res.status(400).send('Pokemon Does not exist in database')
+        return res.status(400).json('Pokemon Does not exist in database')
     }
     const response = await supabase
     .from('pokemon')
     .delete()
     .eq('name', pokemonName)
-    res.send(response)
+    .select()
+    res.json(response)
 })
 
 
