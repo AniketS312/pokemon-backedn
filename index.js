@@ -67,14 +67,15 @@ app.post('/addpokemon', async (req, res) => {
     // Add pokemon
     console.log('Adding pokemon')
     const addPokemon = pokemonTemplate(pokemonName, pokemonNumber, pokemonShiny, pokemonType)
-    const { insertError } = await supabase
+    const { newData, insertError } = await supabase
         .from('pokemon')
         .insert(addPokemon)
+        .select();
         if(insertError) {
             console.error(insertError)
             return res.status(500).send('Error inserting data into database')
         }
-    res.status(200).send('Pokemon added to database')
+    res.status(200).send(newData);
 })
 
 app.delete('/removepokemon/:name', async (req, res) => {
