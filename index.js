@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 const cors = require('cors');
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 4000;
 const pokemonTemplate = require('./pokemonTemplate.js')
 require('dotenv').config()
 
@@ -66,15 +66,18 @@ app.post('/addpokemon', async (req, res) => {
     // Add pokemon
     console.log('Adding pokemon')
     const addPokemon = pokemonTemplate(pokemonName, pokemonNumber, pokemonShiny, pokemonType)
-    const { newData, insertError } = await supabase
+    console.log
+    const { instertData, insertError } = await supabase
         .from('pokemon')
-        .insert(addPokemon)
-        .select();
+        .insert([addPokemon])
+        .select()
+
+        // Error checking
         if(insertError) {
             console.error(insertError)
             return res.status(500).json('Error inserting data into database')
         }
-    res.status(200).json(newData);
+    res.status(200).json(instertData);
 })
 
 app.delete('/removepokemon/:name', async (req, res) => {
