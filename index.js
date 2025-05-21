@@ -99,7 +99,7 @@ app.delete('/removepokemon/:name', async (req, res) => {
     .delete()
     .eq('name', pokemonName)
     .select()
-    res.json(response)
+    res.status(201).json("pokemon deleted")
 })
 
 
